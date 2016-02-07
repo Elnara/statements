@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html ng-app="statement">
+    <head>
+        <!-- website title -->
+        <title>Отправка заявки</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <!-- build:css styles/styles.css-->
+        <link href=".tmp/app.css" rel="stylesheet" />
+        <!-- endbuild -->
+        <link href="/bower_components/ng-notify/src/styles/ng-notify.css" rel="stylesheet" />
+    </head>
+  
+    <body>
+        <div class="container-fluid statements" ng-controller="FormCtrl as vm">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Отправка заявки</h1>  
+                    <div class="well statements__form">
+                        <form role="form" name="appform" class="form-horizontal">
+                            <div class="form-group"
+                                ng-class="{'has-error':vm.submit && !vm.statement.title}">
+                                <label class="control-label col-sm-4 lead">
+                                    Название заявки
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control input-lg" 
+                                        name="title"
+                                        ng-model="vm.statement.title" 
+                                        placeholder="Введите название заявки"
+                                        ng-required="true"/>
+
+                                    <span class="help-block alert alert-danger statements__alert">
+                                        Введите название заявки
+                                    </span>
+                                </div>
+                            </div><!-- end form group -->
+                            <div class="form-group"
+                                ng-class="{'has-error':vm.submit && !vm.statement.date}">
+
+                                <label class="control-label col-sm-4 lead">
+                                    Дата выполнения
+                                </label>
+                                <div class="col-sm-8">
+                                    <mtc-calendar 
+                                        date="vm.statement.date" 
+                                        format="yyyy/MM/dd" 
+                                        original-date="vm.originalDate"
+                                        ng-required="true"></mtc-calendar>
+
+                                    <span class="help-block alert alert-danger statements__alert">
+                                        Введите название заявки
+                                    </span>
+                                </div>
+                            </div><!-- end form group -->
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <input type="button" class="btn btn-lg btn-primary" 
+                                        value="Отправить" ng-click="vm.sent()" />
+                                </div>
+                            </div><!-- end form group -->
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row statements__list">
+                <div class="col-sm-12">          
+                    <div class="text-center" ng-if="0 === vm.statements.length">
+                        <p class="lead">Нет заявок</p>
+                    </div>
+
+                    <table class="table table-striped" ng-if="0 < vm.statements.length"> 
+                        <thead> 
+                            <tr> 
+                                <th>№</th> 
+                                <th>Название</th> 
+                                <th><a href="" ng-click="vm.sort('date')">Дата</a></th>  
+                                <th>&#160;</th> 
+                            </tr> 
+                        </thead> 
+                        <tbody> 
+                            <tr ng-repeat="(key, statement) in vm.statements | offset: (vm.currentPage-1)*vm.itemsPerPage | 
+                                limitTo: vm.itemsPerPage"> 
+
+                                <th scope="row">
+                                    {{key+1}}
+                                </th> 
+                                <td>{{statement.title}}</td> 
+                                <td>{{statement.date}}</td> 
+                                <td>
+                                    <button type="button" class="close"
+                                        ng-click="vm.remove(key)">&times;</button>
+                                </td>
+                            </tr> 
+                        </tbody> 
+                    </table>  
+
+                    <uib-pagination 
+                        ng-if="vm.itemsPerPage < vm.statements.length"
+                        class="pagination-sm statements__pagination" 
+                        total-items="vm.statements.length" 
+                        items-per-page="vm.itemsPerPage"
+                        ng-model="vm.currentPage" 
+                        max-size="vm.maxSize" 
+                        boundary-link-numbers="true" 
+                        rotate="false"></uib-pagination>  
+                </div>              
+            </div>
+        </div> 
+        <!-- build:js js/lib.js -->
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/ng-notify/src/scripts/ng-notify.js"></script>
+        <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js js/app.js -->
+        <script src="./src/client/app/statement.module.js"></script>
+        <script src="./src/client/app/form.controller.js"></script>
+        <script src="./src/client/app/dateFormat.service.js"></script>
+        <script src="./src/client/app/offset.service.js"></script>
+        <script src="./src/client/app/statement.service.js"></script>
+        <script src="./src/client/app/calendar.directive.js"></script>
+        <!-- inject:templates:js -->
+        <!-- endinject -->
+
+        <!-- endbuild -->
+    </body>
+</html>
